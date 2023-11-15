@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,6 +21,13 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "tb_user_concluded_levels",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "level_id")
+    )
+    private List<Level> concludedLevels = new ArrayList<>();
 
 
     public Long getId() {
@@ -53,6 +61,14 @@ public class User implements UserDetails {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public List<Level> getConcludedLevels() {
+        return concludedLevels;
+    }
+
+    public void setConcludedLevels(List<Level> concludedLevels) {
+        this.concludedLevels = concludedLevels;
     }
 
     @Override
