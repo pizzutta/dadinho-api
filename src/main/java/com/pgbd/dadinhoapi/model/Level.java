@@ -24,7 +24,8 @@ public class Level {
     @JoinColumn(name = "level_id")
     private List<Basket> baskets = new ArrayList<>();
     @ElementCollection
-    @CollectionTable(name = "tb_level_options")
+    @CollectionTable(name = "tb_level_options", joinColumns = @JoinColumn(name = "level_id"))
+    @Column(name = "option")
     private List<String> options = new ArrayList<>();
 
     public Long getId() {
