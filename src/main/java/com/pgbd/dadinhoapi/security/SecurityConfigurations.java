@@ -33,6 +33,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/item").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/item-recipe").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/basket").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
