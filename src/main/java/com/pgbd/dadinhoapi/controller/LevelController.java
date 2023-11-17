@@ -1,14 +1,13 @@
 package com.pgbd.dadinhoapi.controller;
 
 import com.pgbd.dadinhoapi.dto.LevelByUserDTO;
-import com.pgbd.dadinhoapi.model.Level;
+import com.pgbd.dadinhoapi.dto.LevelResponseDTO;
 import com.pgbd.dadinhoapi.service.LevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/level")
@@ -20,8 +19,8 @@ public class LevelController {
 
     @GetMapping("/{id}")
     public ResponseEntity getLevel(@PathVariable(value = "id") Long id) {
-        Optional<Level> level = service.findById(id);
-        return level.isPresent() ? ResponseEntity.ok(level.get()) : ResponseEntity.notFound().build();
+        LevelResponseDTO dto = service.findByIdWithOptions(id);
+        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/user/{userId}")

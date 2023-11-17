@@ -1,6 +1,7 @@
 package com.pgbd.dadinhoapi.service;
 
 import com.pgbd.dadinhoapi.dto.LevelByUserDTO;
+import com.pgbd.dadinhoapi.dto.LevelResponseDTO;
 import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.model.User;
 import com.pgbd.dadinhoapi.repository.LevelRepository;
@@ -8,9 +9,9 @@ import com.pgbd.dadinhoapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+import static java.util.Arrays.stream;
 
 @Service
 public class LevelService {
@@ -20,8 +21,31 @@ public class LevelService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<Level> findById(Long id) {
-        return repository.findById(id);
+    public LevelResponseDTO findByIdWithOptions(Long id) {
+        Optional<Level> levelOptional = repository.findById(id);
+
+        if (levelOptional.isEmpty()) {
+            return null;
+        }
+
+        Level level = levelOptional.get();
+        List<String> options = new ArrayList<>();
+
+        for (String answer: level.getAnswers()){
+            options.addAll(stream(answer.split("\\|")).toList());
+        }
+
+        LevelResponseDTO dto = new LevelResponseDTO(
+                level.getId(),
+                level.getIcon(),
+                level.getTitle(),
+                level.getRecipe(),
+                level.getBaskets(),
+                options
+        );
+        Collections.shuffle(dto.options());
+
+        return dto;
     }
 
     public List<LevelByUserDTO> getLevelsByUser(Long userId) {

@@ -15,18 +15,16 @@ public class Level {
     private String icon;
     @Column
     private String title;
-    @Column
-    private String answer;
+    @ElementCollection
+    @CollectionTable(name = "tb_level_answers", joinColumns = @JoinColumn(name = "level_id"))
+    @Column(name = "answer")
+    private List<String> answers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "level_id")
     private List<ItemRecipe> recipe = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "level_id")
     private List<Basket> baskets = new ArrayList<>();
-    @ElementCollection
-    @CollectionTable(name = "tb_level_options", joinColumns = @JoinColumn(name = "level_id"))
-    @Column(name = "option")
-    private List<String> options = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -52,12 +50,12 @@ public class Level {
         this.title = title;
     }
 
-    public String getAnswer() {
-        return answer;
+    public List<String> getAnswers() {
+        return answers;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setAnswers(List<String> answers) {
+        this.answers = answers;
     }
 
     public List<ItemRecipe> getRecipe() {
@@ -74,13 +72,5 @@ public class Level {
 
     public void setBaskets(List<Basket> baskets) {
         this.baskets = baskets;
-    }
-
-    public List<String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<String> options) {
-        this.options = options;
     }
 }
