@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/item")
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "*")
 public class ItemController {
 
     @Autowired
