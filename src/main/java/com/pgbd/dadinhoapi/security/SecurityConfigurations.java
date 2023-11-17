@@ -30,6 +30,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/level/verify-answer").permitAll()
                         .requestMatchers(HttpMethod.POST, "/item").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/item-recipe").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/basket").hasRole("ADMIN")

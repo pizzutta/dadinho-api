@@ -2,6 +2,7 @@ package com.pgbd.dadinhoapi.service;
 
 import com.pgbd.dadinhoapi.dto.LevelByUserDTO;
 import com.pgbd.dadinhoapi.dto.LevelResponseDTO;
+import com.pgbd.dadinhoapi.dto.VerifyUserAnswerDTO;
 import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.model.User;
 import com.pgbd.dadinhoapi.repository.LevelRepository;
@@ -31,7 +32,7 @@ public class LevelService {
         Level level = levelOptional.get();
         List<String> options = new ArrayList<>();
 
-        for (String answer: level.getAnswers()){
+        for (String answer : level.getAnswers()) {
             options.addAll(stream(answer.split("\\|")).toList());
         }
 
@@ -60,5 +61,20 @@ public class LevelService {
         }
 
         return levelsByUser;
+    }
+
+    public Boolean verifyUserAnswer(VerifyUserAnswerDTO data) {
+        Level level = repository.findById(data.levelId()).get();
+        List<String> levelAnswers = level.getAnswers();
+
+        Boolean success = levelAnswers.containsAll(data.userAnswers());
+
+        if (success) {
+            User user = userRepository.findById(data.userId()).get();
+            user.getConcludedLevels().add(level);
+            userRepository.save(user);
+        }
+
+        return success;
     }
 }
