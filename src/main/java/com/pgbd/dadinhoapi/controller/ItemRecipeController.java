@@ -21,7 +21,7 @@ public class ItemRecipeController {
     private ItemRecipeService service;
 
     @PostMapping
-    public ResponseEntity saveItem(@RequestBody @Valid ItemRecipeRegisterDTO data) {
+    public ResponseEntity saveItemRecipe(@RequestBody @Valid ItemRecipeRegisterDTO data) {
         ItemRecipe itemRecipe = service.save(data);
         return ResponseEntity.created(URI.create("/item-recipe/" + itemRecipe.getId())).build();
     }
