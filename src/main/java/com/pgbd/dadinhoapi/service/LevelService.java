@@ -54,7 +54,7 @@ public class LevelService {
         return dto;
     }
 
-    public List<LevelByUserDTO> getLevelsByUser(Long userId) {
+    public List<LevelByUserDTO> findLevelsByUser(Long userId) {
         List<Level> levels = repository.findAll();
         User user = userRepository.findById(userId).get();
         List<LevelByUserDTO> levelsByUser = new ArrayList<>();

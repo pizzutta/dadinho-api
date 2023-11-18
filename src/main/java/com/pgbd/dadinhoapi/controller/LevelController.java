@@ -23,20 +23,20 @@ public class LevelController {
     private LevelService service;
 
     @GetMapping
-    public ResponseEntity getAllLevels() {
+    public ResponseEntity findAllLevels() {
         List<Level> levels = service.findAllLevels();
         return !levels.isEmpty() ? ResponseEntity.ok(levels) : ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getLevel(@PathVariable(value = "id") Long id) {
+    public ResponseEntity findLevelById(@PathVariable(value = "id") Long id) {
         LevelResponseDTO dto = service.findByIdWithOptions(id);
         return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity getLevelsByUser(@PathVariable(name = "userId") Long userId) {
-        List<LevelByUserDTO> levelsByUser = service.getLevelsByUser(userId);
+    public ResponseEntity findLevelsByUser(@PathVariable(name = "userId") Long userId) {
+        List<LevelByUserDTO> levelsByUser = service.findLevelsByUser(userId);
         return !levelsByUser.isEmpty() ? ResponseEntity.ok(levelsByUser) : ResponseEntity.noContent().build();
     }
 
