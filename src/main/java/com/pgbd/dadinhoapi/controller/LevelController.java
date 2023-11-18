@@ -1,14 +1,17 @@
 package com.pgbd.dadinhoapi.controller;
 
 import com.pgbd.dadinhoapi.dto.LevelByUserDTO;
+import com.pgbd.dadinhoapi.dto.LevelRegisterDTO;
 import com.pgbd.dadinhoapi.dto.LevelResponseDTO;
 import com.pgbd.dadinhoapi.dto.VerifyUserAnswerDTO;
+import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.service.LevelService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,6 +32,12 @@ public class LevelController {
     public ResponseEntity getLevelsByUser(@PathVariable(name = "userId") Long userId) {
         List<LevelByUserDTO> levelsByUser = service.getLevelsByUser(userId);
         return !levelsByUser.isEmpty() ? ResponseEntity.ok(levelsByUser) : ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity saveLevel(@RequestBody @Valid LevelRegisterDTO data) {
+        Level level = service.save(data);
+        return ResponseEntity.created(URI.create("/level/" + level.getId())).build();
     }
 
     @PostMapping("/verify-answer")

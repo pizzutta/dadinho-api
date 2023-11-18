@@ -1,6 +1,7 @@
 package com.pgbd.dadinhoapi.service;
 
 import com.pgbd.dadinhoapi.dto.LevelByUserDTO;
+import com.pgbd.dadinhoapi.dto.LevelRegisterDTO;
 import com.pgbd.dadinhoapi.dto.LevelResponseDTO;
 import com.pgbd.dadinhoapi.dto.VerifyUserAnswerDTO;
 import com.pgbd.dadinhoapi.model.Level;
@@ -76,5 +77,15 @@ public class LevelService {
         }
 
         return success;
+    }
+
+    public Level save(LevelRegisterDTO data) {
+        Level level = new Level();
+        level.setIcon(data.icon());
+        level.setTitle(data.title());
+        level.setAnswers(data.answers());
+        repository.save(level);
+
+        return level;
     }
 }
