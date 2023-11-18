@@ -23,6 +23,10 @@ public class LevelService {
     @Autowired
     private UserRepository userRepository;
 
+    public List<Level> findAllLevels() {
+        return repository.findAll();
+    }
+
     public LevelResponseDTO findByIdWithOptions(Long id) {
         Optional<Level> levelOptional = repository.findById(id);
 

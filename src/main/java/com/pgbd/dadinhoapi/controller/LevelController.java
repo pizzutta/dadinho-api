@@ -22,6 +22,12 @@ public class LevelController {
     @Autowired
     private LevelService service;
 
+    @GetMapping
+    public ResponseEntity getAllLevels() {
+        List<Level> levels = service.findAllLevels();
+        return !levels.isEmpty() ? ResponseEntity.ok(levels) : ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity getLevel(@PathVariable(value = "id") Long id) {
         LevelResponseDTO dto = service.findByIdWithOptions(id);
