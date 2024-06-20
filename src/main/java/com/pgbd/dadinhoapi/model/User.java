@@ -1,5 +1,6 @@
 package com.pgbd.dadinhoapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +22,7 @@ public class User implements UserDetails {
     private String name;
     @Column
     private String email;
+    @JsonIgnore
     @Column
     private String password;
     @Enumerated(EnumType.STRING)
@@ -83,6 +85,7 @@ public class User implements UserDetails {
         this.concludedLevels = concludedLevels;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority roleAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
@@ -94,26 +97,31 @@ public class User implements UserDetails {
         return of(roleStudent);
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
