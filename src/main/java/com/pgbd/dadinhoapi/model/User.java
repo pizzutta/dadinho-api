@@ -16,6 +16,8 @@ public class User implements UserDetails {
     @GeneratedValue
     private Long id;
     @Column
+    private String name;
+    @Column
     private String email;
     @Column
     private String password;
@@ -36,6 +38,14 @@ public class User implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
