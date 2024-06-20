@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static java.util.List.of;
+
 @Entity(name = "tb_user")
 public class User implements UserDetails {
 
@@ -83,8 +85,13 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return (this.role == UserRole.ADMIN) ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"))
-                : List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        SimpleGrantedAuthority roleAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
+        SimpleGrantedAuthority roleTeacher = new SimpleGrantedAuthority("ROLE_TEACHER");
+        SimpleGrantedAuthority roleStudent = new SimpleGrantedAuthority("ROLE_STUDENT");
+
+        if (this.role == UserRole.ADMIN) return of(roleAdmin, roleTeacher, roleStudent);
+        if (this.role == UserRole.TEACHER) return of(roleTeacher, roleStudent);
+        return of(roleStudent);
     }
 
     @Override
