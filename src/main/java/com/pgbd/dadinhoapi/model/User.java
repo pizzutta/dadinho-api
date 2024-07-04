@@ -27,14 +27,9 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "tb_user_concluded_levels",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "level_id")
-    )
-    private List<Level> concludedLevels = new ArrayList<>();
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private List<UserConcludedLevel> concludedLevels = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -77,11 +72,11 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public List<Level> getConcludedLevels() {
+    public List<UserConcludedLevel> getConcludedLevels() {
         return concludedLevels;
     }
 
-    public void setConcludedLevels(List<Level> concludedLevels) {
+    public void setConcludedLevels(List<UserConcludedLevel> concludedLevels) {
         this.concludedLevels = concludedLevels;
     }
 
