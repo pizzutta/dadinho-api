@@ -64,7 +64,7 @@ public class LevelService {
         List<LevelByUserDTO> levelsByUser = new ArrayList<>();
 
         for (Level level : levels) {
-            Boolean isConcluded = user.getConcludedLevels().contains(level);
+            Boolean isConcluded = user.getConcludedLevels().stream().map(UserConcludedLevel::getLevel).toList().contains(level);
             LevelByUserDTO dto = new LevelByUserDTO(level.getId(), level.getIcon(), isConcluded);
             levelsByUser.add(dto);
         }
