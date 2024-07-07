@@ -1,11 +1,14 @@
 package com.pgbd.dadinhoapi.service;
 
+import com.pgbd.dadinhoapi.dto.UserResponseDTO;
+import com.pgbd.dadinhoapi.model.Class;
 import com.pgbd.dadinhoapi.model.User;
 import com.pgbd.dadinhoapi.model.UserRole;
 import com.pgbd.dadinhoapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +21,21 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<User> findByRole(UserRole role) {
-        return userRepository.findAllByRole(role);
+    public List<UserResponseDTO> findByRole(UserRole role) {
+        List<User> users = userRepository.findAllByRole(role);
+        List<UserResponseDTO> dtos = new ArrayList<>();
+
+        for (User user : users) {
+            Class clas = user.getClas();
+            UserResponseDTO dto = new UserResponseDTO(
+                    user,
+                    clas.getName(),
+                    clas.getGrade(),
+                    clas.getTeacher()
+            );
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 }

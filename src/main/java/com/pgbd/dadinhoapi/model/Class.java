@@ -1,5 +1,6 @@
 package com.pgbd.dadinhoapi.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -18,8 +19,10 @@ public class Class {
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private User teacher;
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(joinColumns = @JoinColumn(name = "class_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+    @JoinTable(name = "tb_class_students", joinColumns = @JoinColumn(name = "class_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<User> students = new ArrayList<>();
 
     public Long getId() {

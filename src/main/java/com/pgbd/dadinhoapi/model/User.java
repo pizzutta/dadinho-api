@@ -1,5 +1,6 @@
 package com.pgbd.dadinhoapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +28,11 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    @JsonBackReference
+    @ManyToOne
+    @JoinTable(name = "tb_class_students", joinColumns = @JoinColumn(name = "student_id", insertable = false, updatable = false),
+            inverseJoinColumns = @JoinColumn(name = "class_id", insertable = false, updatable = false))
+    private Class clas;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private List<UserConcludedLevel> concludedLevels = new ArrayList<>();
@@ -70,6 +76,10 @@ public class User implements UserDetails {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Class getClas() {
+        return clas;
     }
 
     public List<UserConcludedLevel> getConcludedLevels() {

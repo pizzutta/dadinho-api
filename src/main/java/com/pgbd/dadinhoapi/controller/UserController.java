@@ -1,5 +1,6 @@
 package com.pgbd.dadinhoapi.controller;
 
+import com.pgbd.dadinhoapi.dto.UserResponseDTO;
 import com.pgbd.dadinhoapi.model.User;
 import com.pgbd.dadinhoapi.model.UserRole;
 import com.pgbd.dadinhoapi.service.UserService;
@@ -19,14 +20,12 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity findAllUsers(@RequestParam(name = "role", required = false) UserRole role) {
-        List<User> users;
-
         if (role == null) {
-            users = service.findAll();
+            List<User> users = service.findAll();
+            return !users.isEmpty() ? ResponseEntity.ok(users) : ResponseEntity.noContent().build();
         } else {
-            users = service.findByRole(role);
+            List<UserResponseDTO> users = service.findByRole(role);
+            return !users.isEmpty() ? ResponseEntity.ok(users) : ResponseEntity.noContent().build();
         }
-
-        return !users.isEmpty() ? ResponseEntity.ok(users) : ResponseEntity.noContent().build();
     }
 }
