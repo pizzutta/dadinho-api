@@ -28,4 +28,10 @@ public class UserController {
             return !users.isEmpty() ? ResponseEntity.ok(users) : ResponseEntity.noContent().build();
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity findById(@PathVariable("id") Long id) {
+        UserResponseDTO dto = service.findById(id);
+        return dto != null ? ResponseEntity.ok(dto) : ResponseEntity.notFound().build();
+    }
 }

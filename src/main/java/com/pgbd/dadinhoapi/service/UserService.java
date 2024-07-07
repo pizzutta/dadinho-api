@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -37,5 +38,22 @@ public class UserService {
         }
 
         return dtos;
+    }
+
+    public UserResponseDTO findById(Long id) {
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isEmpty()) {
+            return null;
+        }
+
+        User user = optional.get();
+        Class clas = user.getClas();
+        return new UserResponseDTO(
+                user,
+                clas.getName(),
+                clas.getGrade(),
+                clas.getTeacher()
+        );
     }
 }
