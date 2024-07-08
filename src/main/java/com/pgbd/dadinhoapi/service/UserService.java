@@ -28,6 +28,7 @@ public class UserService {
 
         for (User user : users) {
             Class clas = user.getClas();
+            if (clas == null) clas = new Class();
             UserResponseDTO dto = new UserResponseDTO(
                     user,
                     clas.getName(),
@@ -49,6 +50,7 @@ public class UserService {
 
         User user = optional.get();
         Class clas = user.getClas();
+        if (clas == null) clas = new Class();
         return new UserResponseDTO(
                 user,
                 clas.getName(),
