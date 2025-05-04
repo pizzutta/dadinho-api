@@ -39,11 +39,11 @@ public class BasketService {
     public Basket save(BasketRegisterDTO data) {
         Basket basket = new Basket();
         for (Long itemId : data.itemsIds()) {
-            basket.getItems().add(itemRepository.findById(itemId).get());
+            basket.getItems().add(itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new));
         }
         repository.save(basket);
 
-        Level level = levelRepository.findById(data.levelId()).get();
+        Level level = levelRepository.findById(data.levelId()).orElseThrow(EntityNotFoundException::new);
         level.getBaskets().add(basket);
         levelRepository.save(level);
 
