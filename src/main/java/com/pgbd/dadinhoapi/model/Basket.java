@@ -11,7 +11,7 @@ public class Basket {
     @Id
     @GeneratedValue
     private Long id;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "tb_basket_item",
             joinColumns = @JoinColumn(name = "basket_id"),
