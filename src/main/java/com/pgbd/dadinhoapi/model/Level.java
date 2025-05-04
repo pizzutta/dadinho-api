@@ -1,5 +1,6 @@
 package com.pgbd.dadinhoapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Level {
     private String icon;
     @Column
     private String title;
+    @JsonIgnore
     @ElementCollection
     @CollectionTable(name = "tb_level_answers", joinColumns = @JoinColumn(name = "level_id"))
     @Column(name = "answer")

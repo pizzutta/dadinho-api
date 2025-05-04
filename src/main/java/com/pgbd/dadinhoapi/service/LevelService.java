@@ -1,14 +1,13 @@
 package com.pgbd.dadinhoapi.service;
 
-import com.pgbd.dadinhoapi.dto.LevelByUserDTO;
-import com.pgbd.dadinhoapi.dto.LevelRegisterDTO;
-import com.pgbd.dadinhoapi.dto.LevelResponseDTO;
-import com.pgbd.dadinhoapi.dto.VerifyUserAnswerDTO;
+import com.pgbd.dadinhoapi.dto.*;
 import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.model.User;
 import com.pgbd.dadinhoapi.model.UserConcludedLevel;
 import com.pgbd.dadinhoapi.repository.LevelRepository;
 import com.pgbd.dadinhoapi.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,11 @@ public class LevelService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Level> findAllLevels() {
+    public Optional<Level> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    public List<Level> findAll() {
         return repository.findAll();
     }
 
@@ -64,7 +67,8 @@ public class LevelService {
         List<LevelByUserDTO> levelsByUser = new ArrayList<>();
 
         for (Level level : levels) {
-            Boolean isConcluded = user.getConcludedLevels().stream().map(UserConcludedLevel::getLevel).toList().contains(level);
+            Boolean isConcluded =
+                    user.getConcludedLevels().stream().map(UserConcludedLevel::getLevel).toList().contains(level);
             LevelByUserDTO dto = new LevelByUserDTO(level.getId(), level.getIcon(), isConcluded);
             levelsByUser.add(dto);
         }
@@ -92,13 +96,34 @@ public class LevelService {
         return success;
     }
 
+    @Transactional
     public Level save(LevelRegisterDTO data) {
         Level level = new Level();
+
         level.setIcon(data.icon());
         level.setTitle(data.title());
         level.setAnswers(data.answers());
+
         repository.save(level);
 
         return level;
+    }
+
+    @Transactional
+    public Level save(LevelUpdateDTO data) {
+        Level level = repository.findById(data.id()).orElseThrow(EntityNotFoundException::new);
+
+        level.setIcon(data.icon());
+        level.setTitle(data.title());
+        level.setAnswers(data.answers());
+
+        repository.save(level);
+
+        return level;
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        repository.deleteById(id);
     }
 }
