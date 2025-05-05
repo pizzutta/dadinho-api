@@ -12,11 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.shuffle;
 
 @Service
 public class LevelService {
@@ -32,68 +33,6 @@ public class LevelService {
 
     public List<Level> findAll() {
         return repository.findAll();
-    }
-
-    public LevelResponseDTO findByIdWithOptions(Long id) {
-        Optional<Level> levelOptional = repository.findById(id);
-
-        if (levelOptional.isEmpty()) {
-            return null;
-        }
-
-        Level level = levelOptional.get();
-        List<String> options = new ArrayList<>();
-
-        for (String answer : level.getAnswers()) {
-            options.addAll(stream(answer.split("\\|")).toList());
-        }
-
-        LevelResponseDTO dto = new LevelResponseDTO(
-                level.getId(),
-                level.getIcon(),
-                level.getTitle(),
-                level.getRecipe(),
-                level.getBaskets(),
-                options
-        );
-        Collections.shuffle(dto.options());
-
-        return dto;
-    }
-
-    public List<LevelByUserDTO> findLevelsByUser(Long userId) {
-        List<Level> levels = repository.findAll();
-        User user = userRepository.findById(userId).get();
-        List<LevelByUserDTO> levelsByUser = new ArrayList<>();
-
-        for (Level level : levels) {
-            Boolean isConcluded =
-                    user.getConcludedLevels().stream().map(UserConcludedLevel::getLevel).toList().contains(level);
-            LevelByUserDTO dto = new LevelByUserDTO(level.getId(), level.getIcon(), isConcluded);
-            levelsByUser.add(dto);
-        }
-
-        return levelsByUser;
-    }
-
-    public Boolean verifyUserAnswer(VerifyUserAnswerDTO data) {
-        Level level = repository.findById(data.levelId()).get();
-        List<String> levelAnswers = level.getAnswers();
-
-        Boolean success = levelAnswers.containsAll(data.userAnswers());
-
-        if (success) {
-            User user = userRepository.getReferenceById(data.userId());
-
-            UserConcludedLevel concludedLevel = new UserConcludedLevel();
-            concludedLevel.setLevel(level);
-            concludedLevel.setTotalTime(data.totalTime());
-
-            user.getConcludedLevels().add(concludedLevel);
-            userRepository.save(user);
-        }
-
-        return success;
     }
 
     @Transactional
@@ -125,5 +64,62 @@ public class LevelService {
     @Transactional
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    public LevelSetupDTO mountLevelSetup(Long levelId) {
+        Level level = repository.findById(levelId).orElseThrow(EntityNotFoundException::new);
+        List<String> options = new ArrayList<>();
+
+        for (String answer : level.getAnswers()) {
+            options.addAll(stream(answer.split("\\|")).toList());
+        }
+
+        shuffle(options);
+
+        return new LevelSetupDTO(
+                level.getId(),
+                level.getIcon(),
+                level.getTitle(),
+                level.getRecipe(),
+                level.getBaskets(),
+                options
+        );
+    }
+
+    public List<LevelProgressDTO> getUserProgress(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        List<Level> levels = repository.findAll();
+        List<Long> concludedLevelsIds = user.getConcludedLevels().stream()
+                .map(UserConcludedLevel::getLevel).map(Level::getId).toList();
+        List<LevelProgressDTO> levelProgresses = new ArrayList<>();
+
+        for (Level level : levels) {
+            Boolean isConcluded = concludedLevelsIds.contains(level.getId());
+            LevelProgressDTO dto = new LevelProgressDTO(level.getId(), level.getIcon(), isConcluded);
+            levelProgresses.add(dto);
+        }
+
+        return levelProgresses;
+    }
+
+    @Transactional
+    public Boolean verifyAnswer(UserAnswerDTO data) {
+        Level level = repository.findById(data.levelId()).orElseThrow(EntityNotFoundException::new);
+        List<String> levelAnswers = level.getAnswers();
+
+        Boolean success = new HashSet<>(levelAnswers).containsAll(data.userAnswers());
+
+        if (success) {
+            User user = userRepository.getReferenceById(data.userId());
+
+            UserConcludedLevel concludedLevel = new UserConcludedLevel();
+            concludedLevel.setLevel(level);
+            concludedLevel.setTotalTime(data.totalTime());
+
+            user.getConcludedLevels().add(concludedLevel);
+            userRepository.save(user);
+        }
+
+        return success;
     }
 }
