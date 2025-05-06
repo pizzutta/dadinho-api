@@ -29,7 +29,7 @@ public class LevelController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Level> getById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<Level> getById(@PathVariable Long id) {
         Optional<Level> level = service.findById(id);
         return level.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
