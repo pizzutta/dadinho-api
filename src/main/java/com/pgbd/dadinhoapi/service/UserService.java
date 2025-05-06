@@ -1,29 +1,32 @@
 package com.pgbd.dadinhoapi.service;
 
 import com.pgbd.dadinhoapi.dto.UserResponseDTO;
+import com.pgbd.dadinhoapi.dto.UserUpdateDTO;
 import com.pgbd.dadinhoapi.model.Class;
 import com.pgbd.dadinhoapi.model.User;
 import com.pgbd.dadinhoapi.model.UserRole;
 import com.pgbd.dadinhoapi.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository repository;
 
     public List<User> findAll() {
-        return userRepository.findAll();
+        return repository.findAll();
     }
 
     public List<UserResponseDTO> findByRole(UserRole role) {
-        List<User> users = userRepository.findAllByRole(role);
+        List<User> users = repository.findAllByRole(role);
         List<UserResponseDTO> dtos = new ArrayList<>();
 
         for (User user : users) {
@@ -42,13 +45,8 @@ public class UserService {
     }
 
     public UserResponseDTO findById(Long id) {
-        Optional<User> optional = userRepository.findById(id);
+        User user = repository.findById(id).orElseThrow(EntityNotFoundException::new);
 
-        if (optional.isEmpty()) {
-            return null;
-        }
-
-        User user = optional.get();
         Class clas = user.getClas();
         if (clas == null) clas = new Class();
         return new UserResponseDTO(
@@ -57,5 +55,23 @@ public class UserService {
                 clas.getGrade(),
                 clas.getTeacher()
         );
+    }
+
+    @Transactional
+    public User save(UserUpdateDTO data) {
+        User user = repository.findById(data.id()).orElseThrow(EntityNotFoundException::new);
+
+        user.setName(data.name());
+        user.setEmail(data.email());
+        user.setPassword(new BCryptPasswordEncoder().encode(data.password()));
+
+        repository.save(user);
+
+        return user;
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        repository.deleteById(id);
     }
 }
