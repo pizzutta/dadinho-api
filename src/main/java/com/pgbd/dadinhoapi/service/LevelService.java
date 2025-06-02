@@ -6,12 +6,16 @@ import com.pgbd.dadinhoapi.dto.LevelResponseDTO;
 import com.pgbd.dadinhoapi.dto.VerifyUserAnswerDTO;
 import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.model.User;
+import com.pgbd.dadinhoapi.model.UserConcludedLevel;
 import com.pgbd.dadinhoapi.repository.LevelRepository;
 import com.pgbd.dadinhoapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.stream;
 
@@ -60,7 +64,7 @@ public class LevelService {
         List<LevelByUserDTO> levelsByUser = new ArrayList<>();
 
         for (Level level : levels) {
-            Boolean isConcluded = user.getConcludedLevels().contains(level);
+            Boolean isConcluded = user.getConcludedLevels().stream().map(UserConcludedLevel::getLevel).toList().contains(level);
             LevelByUserDTO dto = new LevelByUserDTO(level.getId(), level.getIcon(), isConcluded);
             levelsByUser.add(dto);
         }
@@ -75,8 +79,13 @@ public class LevelService {
         Boolean success = levelAnswers.containsAll(data.userAnswers());
 
         if (success) {
-            User user = userRepository.findById(data.userId()).get();
-            user.getConcludedLevels().add(level);
+            User user = userRepository.getReferenceById(data.userId());
+
+            UserConcludedLevel concludedLevel = new UserConcludedLevel();
+            concludedLevel.setLevel(level);
+            concludedLevel.setTotalTime(data.totalTime());
+
+            user.getConcludedLevels().add(concludedLevel);
             userRepository.save(user);
         }
 

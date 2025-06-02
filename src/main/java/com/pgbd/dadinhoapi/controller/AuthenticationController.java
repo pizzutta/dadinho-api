@@ -44,6 +44,7 @@ public class AuthenticationController {
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User user = new User();
+        user.setName(data.name());
         user.setEmail(data.email());
         user.setPassword(encryptedPassword);
         user.setRole(data.role());

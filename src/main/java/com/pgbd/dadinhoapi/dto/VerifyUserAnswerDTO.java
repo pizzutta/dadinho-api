@@ -10,6 +10,8 @@ public record VerifyUserAnswerDTO(
         Long userId,
         @NotNull
         Long levelId,
+        @NotNull
+        Integer totalTime,
         @NotEmpty
         List<String> userAnswers
 ) {

@@ -1,5 +1,7 @@
 package com.pgbd.dadinhoapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static java.util.List.of;
+
 @Entity(name = "tb_user")
 public class User implements UserDetails {
 
@@ -16,19 +20,22 @@ public class User implements UserDetails {
     @GeneratedValue
     private Long id;
     @Column
+    private String name;
+    @Column
     private String email;
+    @JsonIgnore
     @Column
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "tb_user_concluded_levels",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "level_id")
-    )
-    private List<Level> concludedLevels = new ArrayList<>();
-
+    @JsonBackReference
+    @ManyToOne
+    @JoinTable(name = "tb_class_students", joinColumns = @JoinColumn(name = "student_id", insertable = false, updatable = false),
+            inverseJoinColumns = @JoinColumn(name = "class_id", insertable = false, updatable = false))
+    private Class clas;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private List<UserConcludedLevel> concludedLevels = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -36,6 +43,14 @@ public class User implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -63,40 +78,55 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public List<Level> getConcludedLevels() {
+    public Class getClas() {
+        return clas;
+    }
+
+    public List<UserConcludedLevel> getConcludedLevels() {
         return concludedLevels;
     }
 
-    public void setConcludedLevels(List<Level> concludedLevels) {
+    public void setConcludedLevels(List<UserConcludedLevel> concludedLevels) {
         this.concludedLevels = concludedLevels;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return (this.role == UserRole.ADMIN) ? List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"))
-                : List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        SimpleGrantedAuthority roleAdmin = new SimpleGrantedAuthority("ROLE_ADMIN");
+        SimpleGrantedAuthority roleTeacher = new SimpleGrantedAuthority("ROLE_TEACHER");
+        SimpleGrantedAuthority roleStudent = new SimpleGrantedAuthority("ROLE_STUDENT");
+
+        if (this.role == UserRole.ADMIN) return of(roleAdmin, roleTeacher, roleStudent);
+        if (this.role == UserRole.TEACHER) return of(roleTeacher, roleStudent);
+        return of(roleStudent);
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
