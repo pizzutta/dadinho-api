@@ -39,6 +39,8 @@ public class SecurityConfigurations {
 
                                 .requestMatchers(GET, "/class").hasAnyRole("ADMIN", "TEACHER")
                                 .requestMatchers(POST, "/class").hasAnyRole("ADMIN", "TEACHER")
+                                .requestMatchers(PUT, "/class").hasAnyRole("ADMIN", "TEACHER")
+                                .requestMatchers(DELETE, "/class").hasAnyRole("ADMIN", "TEACHER")
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
