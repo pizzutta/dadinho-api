@@ -7,7 +7,7 @@ import java.util.List;
 public record ClassRegisterDTO(
         @NotBlank
         String name,
-        @Min(6) @Max(9)
+        @Positive
         Integer grade,
         @NotNull
         Long teacherId,
