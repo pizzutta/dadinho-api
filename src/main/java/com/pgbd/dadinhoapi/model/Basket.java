@@ -5,13 +5,15 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity(name = "tb_basket")
 public class Basket {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "tb_basket_item",
             joinColumns = @JoinColumn(name = "basket_id"),

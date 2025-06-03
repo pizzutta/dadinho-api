@@ -5,7 +5,7 @@ import com.pgbd.dadinhoapi.model.ItemRecipe;
 
 import java.util.List;
 
-public record LevelResponseDTO(
+public record LevelSetupDTO(
         Long id,
         String icon,
         String title,

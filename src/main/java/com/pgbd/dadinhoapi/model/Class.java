@@ -6,11 +6,13 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity(name = "tb_class")
 public class Class {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @Column
     private String name;
@@ -20,7 +22,7 @@ public class Class {
     @JoinColumn(name = "teacher_id")
     private User teacher;
     @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "tb_class_students", joinColumns = @JoinColumn(name = "class_id"),
             inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<User> students = new ArrayList<>();

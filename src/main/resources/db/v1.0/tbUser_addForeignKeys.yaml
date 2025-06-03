@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbUser_addForeignKeys
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: class_id
+            baseTableName: tb_user
+            constraintName: FK_TB_USER_ON_CLASS
+            referencedColumnNames: id
+            referencedTableName: tb_class

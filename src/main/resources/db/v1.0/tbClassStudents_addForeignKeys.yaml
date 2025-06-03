@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbClassStudents_addForeignKeys
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: student_id
+            baseTableName: tb_class_students
+            constraintName: FK_TB_CLASS_STUDENT_ON_USER
+            referencedColumnNames: id
+            referencedTableName: tb_user
+        - addForeignKeyConstraint:
+            baseColumnNames: class_id
+            baseTableName: tb_class_students
+            constraintName: FK_TB_CLASS_STUDENT_ON_CLASS
+            referencedColumnNames: id
+            referencedTableName: tb_class

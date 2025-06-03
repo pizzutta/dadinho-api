@@ -9,12 +9,17 @@ import com.pgbd.dadinhoapi.repository.UserRepository;
 import com.pgbd.dadinhoapi.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+
+import static org.springframework.http.HttpStatusCode.valueOf;
 
 @RestController
 @RequestMapping("auth")
@@ -29,18 +34,20 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
-        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.email(),
+                data.password());
         Authentication auth = this.authenticationManager.authenticate(usernamePassword);
 
         User user = (User) auth.getPrincipal();
         String token = tokenService.generateToken(user);
 
-        return ResponseEntity.ok(new LoginResponseDTO(user.getId(), user.getEmail(), user.getRole().toString(), token));
+        return ResponseEntity.ok(new LoginResponseDTO(user.getId(), user.getName(), user.getEmail(),
+                user.getRole().toString(), token));
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
-        if (this.repository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
+    public ResponseEntity<User> register(@RequestBody @Valid RegisterDTO data) {
+        if (this.repository.findByEmail(data.email()) != null) return ResponseEntity.status(valueOf(409)).build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User user = new User();
@@ -51,6 +58,6 @@ public class AuthenticationController {
 
         this.repository.save(user);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(URI.create("/user/" + user.getId())).body(user);
     }
 }

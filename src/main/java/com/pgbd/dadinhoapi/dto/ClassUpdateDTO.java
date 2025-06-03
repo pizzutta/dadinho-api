@@ -11,7 +11,9 @@ import java.util.List;
 import static com.pgbd.dadinhoapi.model.UserRole.STUDENT;
 import static com.pgbd.dadinhoapi.model.UserRole.TEACHER;
 
-public record ClassRegisterDTO(
+public record ClassUpdateDTO(
+        @NotNull
+        Long id,
         @NotBlank
         String name,
         @Positive

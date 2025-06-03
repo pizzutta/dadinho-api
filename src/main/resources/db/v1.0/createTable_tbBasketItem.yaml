@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: createTable_tbBasketItem
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            tableName: tb_basket_item
+            columns:
+              - column:
+                  name: basket_id
+                  type: BIGINT
+              - column:
+                  name: item_id
+                  type: BIGINT

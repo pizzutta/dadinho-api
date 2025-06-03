@@ -1,23 +1,23 @@
 package com.pgbd.dadinhoapi.service;
 
-import com.pgbd.dadinhoapi.dto.LevelByUserDTO;
-import com.pgbd.dadinhoapi.dto.LevelRegisterDTO;
-import com.pgbd.dadinhoapi.dto.LevelResponseDTO;
-import com.pgbd.dadinhoapi.dto.VerifyUserAnswerDTO;
+import com.pgbd.dadinhoapi.dto.*;
 import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.model.User;
 import com.pgbd.dadinhoapi.model.UserConcludedLevel;
 import com.pgbd.dadinhoapi.repository.LevelRepository;
 import com.pgbd.dadinhoapi.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.shuffle;
 
 @Service
 public class LevelService {
@@ -27,25 +27,56 @@ public class LevelService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Level> findAllLevels() {
+    public Optional<Level> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    public List<Level> findAll() {
         return repository.findAll();
     }
 
-    public LevelResponseDTO findByIdWithOptions(Long id) {
-        Optional<Level> levelOptional = repository.findById(id);
+    @Transactional
+    public Level save(LevelRegisterDTO data) {
+        Level level = new Level();
 
-        if (levelOptional.isEmpty()) {
-            return null;
-        }
+        level.setIcon(data.icon());
+        level.setTitle(data.title());
+        level.setAnswers(data.answers());
 
-        Level level = levelOptional.get();
+        repository.save(level);
+
+        return level;
+    }
+
+    @Transactional
+    public Level save(LevelUpdateDTO data) {
+        Level level = repository.findById(data.id()).orElseThrow(EntityNotFoundException::new);
+
+        level.setIcon(data.icon());
+        level.setTitle(data.title());
+        level.setAnswers(data.answers());
+
+        repository.save(level);
+
+        return level;
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
+    public LevelSetupDTO mountLevelSetup(Long levelId) {
+        Level level = repository.findById(levelId).orElseThrow(EntityNotFoundException::new);
         List<String> options = new ArrayList<>();
 
         for (String answer : level.getAnswers()) {
             options.addAll(stream(answer.split("\\|")).toList());
         }
 
-        LevelResponseDTO dto = new LevelResponseDTO(
+        shuffle(options);
+
+        return new LevelSetupDTO(
                 level.getId(),
                 level.getIcon(),
                 level.getTitle(),
@@ -53,30 +84,30 @@ public class LevelService {
                 level.getBaskets(),
                 options
         );
-        Collections.shuffle(dto.options());
-
-        return dto;
     }
 
-    public List<LevelByUserDTO> findLevelsByUser(Long userId) {
+    public List<LevelProgressDTO> getUserProgress(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         List<Level> levels = repository.findAll();
-        User user = userRepository.findById(userId).get();
-        List<LevelByUserDTO> levelsByUser = new ArrayList<>();
+        List<Long> concludedLevelsIds = user.getConcludedLevels().stream()
+                .map(UserConcludedLevel::getLevel).map(Level::getId).toList();
+        List<LevelProgressDTO> levelProgresses = new ArrayList<>();
 
         for (Level level : levels) {
-            Boolean isConcluded = user.getConcludedLevels().stream().map(UserConcludedLevel::getLevel).toList().contains(level);
-            LevelByUserDTO dto = new LevelByUserDTO(level.getId(), level.getIcon(), isConcluded);
-            levelsByUser.add(dto);
+            Boolean isConcluded = concludedLevelsIds.contains(level.getId());
+            LevelProgressDTO dto = new LevelProgressDTO(level.getId(), level.getIcon(), isConcluded);
+            levelProgresses.add(dto);
         }
 
-        return levelsByUser;
+        return levelProgresses;
     }
 
-    public Boolean verifyUserAnswer(VerifyUserAnswerDTO data) {
-        Level level = repository.findById(data.levelId()).get();
+    @Transactional
+    public Boolean verifyAnswer(UserAnswerDTO data) {
+        Level level = repository.findById(data.levelId()).orElseThrow(EntityNotFoundException::new);
         List<String> levelAnswers = level.getAnswers();
 
-        Boolean success = levelAnswers.containsAll(data.userAnswers());
+        Boolean success = new HashSet<>(levelAnswers).containsAll(data.userAnswers());
 
         if (success) {
             User user = userRepository.getReferenceById(data.userId());
@@ -90,15 +121,5 @@ public class LevelService {
         }
 
         return success;
-    }
-
-    public Level save(LevelRegisterDTO data) {
-        Level level = new Level();
-        level.setIcon(data.icon());
-        level.setTitle(data.title());
-        level.setAnswers(data.answers());
-        repository.save(level);
-
-        return level;
     }
 }

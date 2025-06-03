@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbLevelAnswers_addForeignKeys
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: level_id
+            baseTableName: tb_level_answers
+            constraintName: FK_TB_LEVEL_ANSWERS_ON_LEVEL
+            referencedColumnNames: id
+            referencedTableName: tb_level

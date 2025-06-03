@@ -11,13 +11,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
 import static java.util.List.of;
 
 @Entity(name = "tb_user")
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @Column
     private String name;

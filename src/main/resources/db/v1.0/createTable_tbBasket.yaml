@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: createTable_tbBasket
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            tableName: tb_basket
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tb_basket
+              - column:
+                  name: level_id
+                  type: BIGINT

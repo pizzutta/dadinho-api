@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record VerifyUserAnswerDTO(
+public record UserAnswerDTO(
         @NotNull
         Long userId,
         @NotNull

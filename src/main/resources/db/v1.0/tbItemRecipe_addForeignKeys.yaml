@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbItemRecipe_addForeignKeys
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: item_id
+            baseTableName: tb_item_recipe
+            constraintName: FK_TB_ITEM_RECIPE_ON_ITEM
+            referencedColumnNames: id
+            referencedTableName: tb_item
+        - addForeignKeyConstraint:
+            baseColumnNames: level_id
+            baseTableName: tb_item_recipe
+            constraintName: FK_TB_ITEM_RECIPE_ON_LEVEL
+            referencedColumnNames: id
+            referencedTableName: tb_level
