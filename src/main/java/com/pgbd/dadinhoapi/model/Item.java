@@ -5,11 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity(name = "tb_item")
 public class Item {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @Column
     private String icon;

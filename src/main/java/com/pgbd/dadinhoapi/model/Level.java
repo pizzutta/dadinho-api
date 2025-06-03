@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity(name = "tb_level")
 public class Level {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @Column
     private String icon;

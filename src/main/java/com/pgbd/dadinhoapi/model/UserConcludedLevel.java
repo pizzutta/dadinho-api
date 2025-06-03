@@ -2,11 +2,13 @@ package com.pgbd.dadinhoapi.model;
 
 import jakarta.persistence.*;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity(name = "tb_user_concluded_level")
 public class UserConcludedLevel {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "level_id")

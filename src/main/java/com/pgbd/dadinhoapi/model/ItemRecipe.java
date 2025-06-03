@@ -2,11 +2,13 @@ package com.pgbd.dadinhoapi.model;
 
 import jakarta.persistence.*;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @Entity(name = "tb_item_recipe")
 public class ItemRecipe {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "item_id")
