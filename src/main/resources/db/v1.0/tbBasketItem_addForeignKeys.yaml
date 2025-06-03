@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbBasketItem_addForeignKeys
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: basket_id
+            baseTableName: tb_basket_item
+            constraintName: FK_TB_BASKET_ITEM_ON_BASKET
+            referencedColumnNames: id
+            referencedTableName: tb_basket
+        - addForeignKeyConstraint:
+            baseColumnNames: item_id
+            baseTableName: tb_basket_item
+            constraintName: FK_TB_BASKET_ITEM_ON_ITEM
+            referencedColumnNames: id
+            referencedTableName: tb_item

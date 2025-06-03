@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: createTable_tbUserConcludedLevel
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            tableName: tb_user_concluded_level
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tb_user_concluded_level
+              - column:
+                  name: total_time
+                  type: INTEGER
+              - column:
+                  name: level_id
+                  type: BIGINT
+              - column:
+                  name: user_id
+                  type: BIGINT

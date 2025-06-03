@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbUserConcludedLevel
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: level_id
+            baseTableName: tb_user_concluded_level
+            constraintName: FK_TB_USER_CONCLUDED_LEVEL_ON_LEVEL
+            referencedColumnNames: id
+            referencedTableName: tb_level
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: tb_user_concluded_level
+            constraintName: FK_TB_USER_CONCLUDED_LEVEL_ON_USER
+            referencedColumnNames: id
+            referencedTableName: tb_user

@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: createTable_tbItem
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            tableName: tb_item
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tb_item
+              - column:
+                  name: icon
+                  type: VARCHAR(255)
+              - column:
+                  name: name
+                  type: VARCHAR(255)

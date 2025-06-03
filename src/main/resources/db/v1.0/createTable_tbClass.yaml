@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: createTable_tbClass
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            tableName: tb_class
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tb_class
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: grade
+                  type: INTEGER
+              - column:
+                  name: teacher_id
+                  type: BIGINT
