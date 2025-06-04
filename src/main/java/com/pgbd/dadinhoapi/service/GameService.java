@@ -15,7 +15,7 @@ public class GameService {
 
     public Result submit(UserAnswerDTO data) {
         GameCommandValidator validator = validatorProvider.getObject();
-        return validator.run(data);
+        return validator.validate(data);
     }
 
 }

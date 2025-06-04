@@ -13,13 +13,15 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.pgbd.dadinhoapi.game.GameCommandInterpreter.run;
 import static com.pgbd.dadinhoapi.game.model.Actions.valueOf;
-import static com.pgbd.dadinhoapi.game.model.ValidationStatus.INVALID_BASKET;
-import static com.pgbd.dadinhoapi.game.model.ValidationStatus.SYNTAX_ERROR;
+import static com.pgbd.dadinhoapi.game.model.Status.INVALID_BASKET;
+import static com.pgbd.dadinhoapi.game.model.Status.SYNTAX_ERROR;
 import static java.util.stream.Collectors.toMap;
 
 @Component
@@ -36,16 +38,25 @@ public class GameCommandValidator {
     private Map<Item, Integer> actual;
 
     private final Result result = new Result();
-    private final Command command = new Command();
 
     public GameCommandValidator(LevelService levelService, ItemService itemService) {
         this.levelService = levelService;
         this.itemService = itemService;
     }
 
-    public Result run(UserAnswerDTO data) {
+    public Result validate(UserAnswerDTO data) {
         this.setup(data);
-        this.handleAction(data.userAnswers().get(0));
+
+        List<Command> commands = new ArrayList<>();
+        for (String answer : data.userAnswers()) {
+            Command command = new Command();
+            this.handleAction(answer, command);
+            commands.add(command);
+        }
+
+        if (!result.isValid()) return result;
+
+        run(commands, result);
         return this.result;
     }
 
@@ -57,7 +68,7 @@ public class GameCommandValidator {
         expected = level.getRecipe().stream().collect(toMap(ItemRecipe::getItem, ItemRecipe::getQuantity));
     }
 
-    private void handleAction(String commandString) {
+    private void handleAction(String commandString, Command command) {
         int firstSpace = commandString.indexOf(' ');
         String action = commandString.substring(0, firstSpace).toUpperCase();
 
@@ -69,10 +80,10 @@ public class GameCommandValidator {
             }
         }
 
-        handleQuantity(commandString.substring(firstSpace + 1));
+        handleQuantity(commandString.substring(firstSpace + 1), command);
     }
 
-    private void handleQuantity(String commandString) {
+    private void handleQuantity(String commandString, Command command) {
         int firstSpace = commandString.indexOf(' ');
         String quantity = commandString.substring(0, firstSpace).toUpperCase();
 
@@ -93,40 +104,32 @@ public class GameCommandValidator {
                     }
                 }
             }
-            case "UM", "UMA" -> {
-                command.setQuantity(1);
-            }
-            case "DOIS", "DUAS" -> {
-                command.setQuantity(2);
-            }
-            case "TRÊS" -> {
-                command.setQuantity(3);
-            }
-            case "QUATRO" -> {
-                command.setQuantity(4);
-            }
+            case "UM", "UMA" -> command.setQuantity(1);
+            case "DOIS", "DUAS" -> command.setQuantity(2);
+            case "TRÊS" -> command.setQuantity(3);
+            case "QUATRO" -> command.setQuantity(4);
             default -> {
                 result.setStatus(SYNTAX_ERROR);
                 return;
             }
         }
 
-        handleItem(commandString.substring(firstSpace + 1));
+        handleItem(commandString.substring(firstSpace + 1), command);
     }
 
-    private void handleItem(String commandString) {
+    private void handleItem(String commandString, Command command) {
         int firstSpace = commandString.indexOf(' ');
         String item = commandString.substring(0, firstSpace).toUpperCase();
-        boolean isValid = validateItem(item);
+        boolean isValid = validateItem(item, command);
 
         if (!isValid) {
             return;
         }
 
-        handleBasket(commandString.substring(firstSpace + 1));
+        handleBasket(commandString.substring(firstSpace + 1), command);
     }
 
-    private void handleBasket(String commandString) {
+    private void handleBasket(String commandString, Command command) {
         int firstSpace = commandString.indexOf(' ');
         String basket = commandString.substring(0, firstSpace).toUpperCase();
 
@@ -141,10 +144,11 @@ public class GameCommandValidator {
         switch (command.getAction()) {
             case PEGUE -> {
                 if (basket.startsWith("CESTO")) {
-                    validateBasket(basket);
+                    validateBasket(basket, command);
                 } else {
                     if (basket.equalsIgnoreCase("MEU CESTO")) {
                         result.setStatus(INVALID_BASKET);
+                        result.setErrorDetail(basket);
                     } else {
                         result.setStatus(SYNTAX_ERROR);
                     }
@@ -153,30 +157,34 @@ public class GameCommandValidator {
             case REMOVA -> {
                 if (!basket.equalsIgnoreCase("MEU CESTO")) {
                     result.setStatus(INVALID_BASKET);
+                    result.setErrorDetail(basket);
                 }
             }
         }
 
     }
 
-    private boolean validateItem(String item) {
+    private boolean validateItem(String item, Command command) {
         Optional<Item> optionalItem =
                 items.stream().filter(it -> it.getName().equalsIgnoreCase(item) || it.getIcon().equals(item)).findFirst();
 
         optionalItem.ifPresentOrElse(
-                it -> command.setItem(it),
+                command::setItem,
                 () -> result.setStatus(SYNTAX_ERROR)
         );
 
         return optionalItem.isPresent();
     }
 
-    private boolean validateBasket(String basket) {
+    private boolean validateBasket(String basket, Command command) {
         Optional<Basket> optionalBasket = baskets.stream().filter(it -> it.getName().equalsIgnoreCase(basket)).findFirst();
 
         optionalBasket.ifPresentOrElse(
-                it -> command.setBasket(it),
-                () -> result.setStatus(INVALID_BASKET)
+                command::setBasket,
+                () -> {
+                    result.setStatus(INVALID_BASKET);
+                    result.setErrorDetail(basket);
+                }
         );
 
         return optionalBasket.isPresent();
