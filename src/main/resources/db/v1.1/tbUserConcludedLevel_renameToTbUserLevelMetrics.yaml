@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbUserConcludedLevel_renameToTbUserLevelMetrics
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - renameTable:
+            oldTableName: tb_user_concluded_level
+            newTableName: tb_user_level_metrics

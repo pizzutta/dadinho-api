@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private Class clas;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
-    private List<UserConcludedLevel> concludedLevels = new ArrayList<>();
+    private List<UserLevelMetrics> concludedLevels = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -83,11 +83,11 @@ public class User implements UserDetails {
         return clas;
     }
 
-    public List<UserConcludedLevel> getConcludedLevels() {
+    public List<UserLevelMetrics> getConcludedLevels() {
         return concludedLevels;
     }
 
-    public void setConcludedLevels(List<UserConcludedLevel> concludedLevels) {
+    public void setConcludedLevels(List<UserLevelMetrics> concludedLevels) {
         this.concludedLevels = concludedLevels;
     }
 

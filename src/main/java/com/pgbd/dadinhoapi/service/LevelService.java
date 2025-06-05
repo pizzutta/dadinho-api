@@ -3,7 +3,7 @@ package com.pgbd.dadinhoapi.service;
 import com.pgbd.dadinhoapi.dto.*;
 import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.model.User;
-import com.pgbd.dadinhoapi.model.UserConcludedLevel;
+import com.pgbd.dadinhoapi.model.UserLevelMetrics;
 import com.pgbd.dadinhoapi.repository.LevelRepository;
 import com.pgbd.dadinhoapi.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -89,7 +89,7 @@ public class LevelService {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         List<Level> levels = repository.findAll();
         List<Long> concludedLevelsIds = user.getConcludedLevels().stream()
-                .map(UserConcludedLevel::getLevel).map(Level::getId).toList();
+                .map(UserLevelMetrics::getLevel).map(Level::getId).toList();
         List<LevelProgressDTO> levelProgresses = new ArrayList<>();
 
         for (Level level : levels) {

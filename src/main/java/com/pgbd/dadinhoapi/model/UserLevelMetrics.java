@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Entity(name = "tb_user_concluded_level")
-public class UserConcludedLevel {
+@Entity(name = "tb_user_level_metrics")
+public class UserLevelMetrics {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -13,7 +13,7 @@ public class UserConcludedLevel {
     @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;
-    @Column
+    @Column(name = "total_time")
     private Integer totalTime;
 
     public Long getId() {
