@@ -7,11 +7,6 @@ import com.pgbd.dadinhoapi.model.Basket;
 import com.pgbd.dadinhoapi.model.Item;
 import com.pgbd.dadinhoapi.model.ItemRecipe;
 import com.pgbd.dadinhoapi.model.Level;
-import com.pgbd.dadinhoapi.service.ItemService;
-import com.pgbd.dadinhoapi.service.LevelService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,51 +19,38 @@ import static com.pgbd.dadinhoapi.game.model.Status.INVALID_BASKET;
 import static com.pgbd.dadinhoapi.game.model.Status.SYNTAX_ERROR;
 import static java.util.stream.Collectors.toMap;
 
-@Component
-@Scope("prototype")
 public class GameCommandValidator {
 
-    private final LevelService levelService;
-    private final ItemService itemService;
+    private static List<Basket> baskets;
+    private static List<Item> items;
 
-    private List<Basket> baskets;
-    private List<Item> items;
-
-    private Map<Item, Integer> expected;
-    private Map<Item, Integer> actual;
-
-    private final Result result = new Result();
-
-    public GameCommandValidator(LevelService levelService, ItemService itemService) {
-        this.levelService = levelService;
-        this.itemService = itemService;
-    }
-
-    public Result validate(UserAnswerDTO data) {
-        this.setup(data);
+    public static Result validate(UserAnswerDTO data, Level level, List<Item> allItems) {
+        Result result = new Result();
+        setup(result, level, allItems);
 
         List<Command> commands = new ArrayList<>();
         for (String answer : data.userAnswers()) {
             Command command = new Command();
-            this.handleAction(answer, command);
+            handleAction(answer, command, result);
             commands.add(command);
         }
 
         if (!result.isValid()) return result;
 
         run(commands, result);
-        return this.result;
+        return result;
     }
 
-    private void setup(UserAnswerDTO data) {
-        Level level = levelService.findById(data.levelId()).orElseThrow(EntityNotFoundException::new);
-        items = itemService.findAll();
-
+    private static void setup(Result result, Level level, List<Item> allItems) {
+        items = allItems;
         baskets = level.getBaskets();
-        expected = level.getRecipe().stream().collect(toMap(ItemRecipe::getItem, ItemRecipe::getQuantity));
+
+        Map<Item, Integer> expected = level.getRecipe().stream().collect(toMap(ItemRecipe::getItem,
+                ItemRecipe::getQuantity));
+        result.setExpected(expected);
     }
 
-    private void handleAction(String commandString, Command command) {
+    private static void handleAction(String commandString, Command command, Result result) {
         int firstSpace = commandString.indexOf(' ');
         String action = commandString.substring(0, firstSpace).toUpperCase();
 
@@ -80,10 +62,10 @@ public class GameCommandValidator {
             }
         }
 
-        handleQuantity(commandString.substring(firstSpace + 1), command);
+        handleQuantity(commandString.substring(firstSpace + 1), command, result);
     }
 
-    private void handleQuantity(String commandString, Command command) {
+    private static void handleQuantity(String commandString, Command command, Result result) {
         int firstSpace = commandString.indexOf(' ');
         String quantity = commandString.substring(0, firstSpace).toUpperCase();
 
@@ -114,22 +96,22 @@ public class GameCommandValidator {
             }
         }
 
-        handleItem(commandString.substring(firstSpace + 1), command);
+        handleItem(commandString.substring(firstSpace + 1), command, result);
     }
 
-    private void handleItem(String commandString, Command command) {
+    private static void handleItem(String commandString, Command command, Result result) {
         int firstSpace = commandString.indexOf(' ');
         String item = commandString.substring(0, firstSpace).toUpperCase();
-        boolean isValid = validateItem(item, command);
+        boolean isValid = validateItem(item, command, result);
 
         if (!isValid) {
             return;
         }
 
-        handleBasket(commandString.substring(firstSpace + 1), command);
+        handleBasket(commandString.substring(firstSpace + 1), command, result);
     }
 
-    private void handleBasket(String commandString, Command command) {
+    private static void handleBasket(String commandString, Command command, Result result) {
         int firstSpace = commandString.indexOf(' ');
         String basket = commandString.substring(0, firstSpace).toUpperCase();
 
@@ -144,7 +126,7 @@ public class GameCommandValidator {
         switch (command.getAction()) {
             case PEGUE -> {
                 if (basket.startsWith("CESTO")) {
-                    validateBasket(basket, command);
+                    validateBasket(basket, command, result);
                 } else {
                     if (basket.equalsIgnoreCase("MEU CESTO")) {
                         result.setStatus(INVALID_BASKET);
@@ -164,7 +146,7 @@ public class GameCommandValidator {
 
     }
 
-    private boolean validateItem(String item, Command command) {
+    private static boolean validateItem(String item, Command command, Result result) {
         Optional<Item> optionalItem =
                 items.stream().filter(it -> it.getName().equalsIgnoreCase(item) || it.getIcon().equals(item)).findFirst();
 
@@ -176,7 +158,7 @@ public class GameCommandValidator {
         return optionalItem.isPresent();
     }
 
-    private boolean validateBasket(String basket, Command command) {
+    private static boolean validateBasket(String basket, Command command, Result result) {
         Optional<Basket> optionalBasket = baskets.stream().filter(it -> it.getName().equalsIgnoreCase(basket)).findFirst();
 
         optionalBasket.ifPresentOrElse(

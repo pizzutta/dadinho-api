@@ -9,6 +9,7 @@ public class Result {
 
     Status status;
     String errorDetail;
+    Map<Item, Integer> expected;
     Map<Item, Integer> finalBasket;
 
     public Status getStatus() {
@@ -25,6 +26,14 @@ public class Result {
 
     public void setErrorDetail(String errorDetail) {
         this.errorDetail = errorDetail;
+    }
+
+    public Map<Item, Integer> getExpected() {
+        return expected;
+    }
+
+    public void setExpected(Map<Item, Integer> expected) {
+        this.expected = expected;
     }
 
     public Map<Item, Integer> getFinalBasket() {
