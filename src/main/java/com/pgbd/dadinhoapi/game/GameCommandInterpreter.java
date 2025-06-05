@@ -29,7 +29,7 @@ public class GameCommandInterpreter {
     private static void handleSelect(Result result, Command command, Map<Item, Integer> finalBasket) {
         Basket basket = command.getBasket();
         Item item = command.getItem();
-        finalBasket.put(item, 0);
+        finalBasket.putIfAbsent(item, 0);
 
         if (command.getQuantity() != null) {
             for (int i = 0; i < command.getQuantity(); i++) {
