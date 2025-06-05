@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,26 +99,5 @@ public class LevelService {
         }
 
         return levelProgresses;
-    }
-
-    @Transactional
-    public Boolean verifyAnswer(UserAnswerDTO data) {
-        Level level = repository.findById(data.levelId()).orElseThrow(EntityNotFoundException::new);
-        List<String> levelAnswers = level.getAnswers();
-
-        Boolean success = new HashSet<>(levelAnswers).containsAll(data.userAnswers());
-
-        if (success) {
-            User user = userRepository.getReferenceById(data.userId());
-
-            UserConcludedLevel concludedLevel = new UserConcludedLevel();
-            concludedLevel.setLevel(level);
-            concludedLevel.setTotalTime(data.totalTime());
-
-            user.getConcludedLevels().add(concludedLevel);
-            userRepository.save(user);
-        }
-
-        return success;
     }
 }
