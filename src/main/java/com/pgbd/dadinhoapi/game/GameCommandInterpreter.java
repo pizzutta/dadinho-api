@@ -2,13 +2,14 @@ package com.pgbd.dadinhoapi.game;
 
 import com.pgbd.dadinhoapi.game.model.Command;
 import com.pgbd.dadinhoapi.game.model.Result;
-import com.pgbd.dadinhoapi.game.model.Status;
 import com.pgbd.dadinhoapi.model.Basket;
 import com.pgbd.dadinhoapi.model.Item;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.pgbd.dadinhoapi.game.model.Status.INSUFFICIENT_ITEMS_ON_BASKET;
 
 public class GameCommandInterpreter {
 
@@ -33,8 +34,9 @@ public class GameCommandInterpreter {
         if (command.getQuantity() != null) {
             for (int i = 0; i < command.getQuantity(); i++) {
                 if (!basket.getItems().contains(item)) {
-                    result.setStatus(Status.INSUFFICIENT_ITEMS);
+                    result.setStatus(INSUFFICIENT_ITEMS_ON_BASKET);
                     result.setErrorDetail(basket.getName());
+                    break;
                 } else {
                     int index = basket.getItems().indexOf(item);
                     putItemIntoFinalBasket(basket, index, finalBasket);
@@ -53,7 +55,7 @@ public class GameCommandInterpreter {
         Integer commandQuantity = command.getQuantity();
         Integer basketQuantity = finalBasket.get(item);
         if (commandQuantity > basketQuantity) {
-            result.setStatus(Status.INSUFFICIENT_ITEMS);
+            result.setStatus(INSUFFICIENT_ITEMS_ON_BASKET);
             result.setErrorDetail("Seu Cesto");
         } else {
             finalBasket.put(item, basketQuantity - commandQuantity);
