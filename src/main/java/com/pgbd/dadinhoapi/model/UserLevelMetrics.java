@@ -11,6 +11,9 @@ public class UserLevelMetrics {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;
     @Column(name = "total_time")
@@ -22,6 +25,14 @@ public class UserLevelMetrics {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Level getLevel() {

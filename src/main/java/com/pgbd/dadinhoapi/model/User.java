@@ -7,9 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static java.util.List.of;
@@ -31,12 +29,10 @@ public class User implements UserDetails {
     private UserRole role;
     @JsonBackReference
     @ManyToOne
-    @JoinTable(name = "tb_class_students", joinColumns = @JoinColumn(name = "student_id", insertable = false, updatable = false),
+    @JoinTable(name = "tb_class_students", joinColumns = @JoinColumn(name = "student_id", insertable = false, updatable =
+            false),
             inverseJoinColumns = @JoinColumn(name = "class_id", insertable = false, updatable = false))
     private Class clas;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
-    private List<UserLevelMetrics> concludedLevels = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -81,14 +77,6 @@ public class User implements UserDetails {
 
     public Class getClas() {
         return clas;
-    }
-
-    public List<UserLevelMetrics> getConcludedLevels() {
-        return concludedLevels;
-    }
-
-    public void setConcludedLevels(List<UserLevelMetrics> concludedLevels) {
-        this.concludedLevels = concludedLevels;
     }
 
     @JsonIgnore
