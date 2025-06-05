@@ -23,7 +23,7 @@ public class GameService {
     public Result submit(UserAnswerDTO data) {
         Level level = levelService.findById(data.levelId()).orElseThrow(EntityNotFoundException::new);
         List<Item> allItems = itemService.findAll();
-        return validate(data, level, allItems);
+        return validate(data.userAnswers(), level, allItems);
     }
 
 }

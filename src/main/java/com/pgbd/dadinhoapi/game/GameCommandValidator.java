@@ -1,6 +1,5 @@
 package com.pgbd.dadinhoapi.game;
 
-import com.pgbd.dadinhoapi.dto.UserAnswerDTO;
 import com.pgbd.dadinhoapi.game.model.Command;
 import com.pgbd.dadinhoapi.game.model.Result;
 import com.pgbd.dadinhoapi.model.Basket;
@@ -23,12 +22,12 @@ public class GameCommandValidator {
     private static List<Basket> baskets;
     private static List<Item> items;
 
-    public static Result validate(UserAnswerDTO data, Level level, List<Item> allItems) {
+    public static Result validate(List<String> answers, Level level, List<Item> allItems) {
         Result result = new Result();
         setup(result, level, allItems);
 
         List<Command> commands = new ArrayList<>();
-        for (String answer : data.userAnswers()) {
+        for (String answer : answers) {
             Command command = new Command();
             handleAction(answer, command, result);
             commands.add(command);
