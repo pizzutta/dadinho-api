@@ -15,8 +15,7 @@ import java.util.Optional;
 
 import static com.pgbd.dadinhoapi.game.GameCommandInterpreter.run;
 import static com.pgbd.dadinhoapi.game.model.Actions.valueOf;
-import static com.pgbd.dadinhoapi.game.model.Status.INVALID_BASKET;
-import static com.pgbd.dadinhoapi.game.model.Status.SYNTAX_ERROR;
+import static com.pgbd.dadinhoapi.game.model.Status.*;
 import static java.util.stream.Collectors.toMap;
 
 public class GameCommandValidator {
@@ -38,6 +37,9 @@ public class GameCommandValidator {
         if (!result.isValid()) return result;
 
         run(commands, result);
+        if (!result.isValid()) return result;
+
+        validateResult(result);
         return result;
     }
 
@@ -170,5 +172,19 @@ public class GameCommandValidator {
         );
 
         return optionalBasket.isPresent();
+    }
+
+    private static void validateResult(Result result) {
+        Map<Item, Integer> expected = result.getExpected();
+        Map<Item, Integer> finalBasket = result.getFinalBasket();
+
+        expected.forEach((item, expectedQuantity) -> {
+            Integer resultQuantity = finalBasket.get(item);
+            if (resultQuantity.equals(expectedQuantity)) {
+                result.setStatus(CORRECT);
+            } else {
+                result.setStatus(INCORRECT);
+            }
+        });
     }
 }
