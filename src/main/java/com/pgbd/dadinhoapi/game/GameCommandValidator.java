@@ -10,6 +10,7 @@ import com.pgbd.dadinhoapi.model.Level;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import static com.pgbd.dadinhoapi.game.GameCommandInterpreter.run;
@@ -177,13 +178,16 @@ public class GameCommandValidator {
         Map<Item, Integer> expected = result.getExpected();
         Map<Item, Integer> finalBasket = result.getFinalBasket();
 
-        expected.forEach((item, expectedQuantity) -> {
+        for (Entry<Item, Integer> entry : expected.entrySet()) {
+            Item item = entry.getKey();
+            Integer expectedQuantity = entry.getValue();
             Integer resultQuantity = finalBasket.get(item);
             if (resultQuantity.equals(expectedQuantity)) {
                 result.setStatus(CORRECT);
             } else {
                 result.setStatus(INCORRECT);
+                break;
             }
-        });
+        }
     }
 }
