@@ -16,8 +16,12 @@ public class UserLevelMetrics {
     @ManyToOne
     @JoinColumn(name = "level_id")
     private Level level;
+    @Column
+    private Integer attempts;
     @Column(name = "total_time")
     private Integer totalTime;
+    @Column
+    private Boolean concluded;
 
     public Long getId() {
         return id;
@@ -43,11 +47,27 @@ public class UserLevelMetrics {
         this.level = level;
     }
 
+    public Integer getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(Integer attempts) {
+        this.attempts = attempts;
+    }
+
     public Integer getTotalTime() {
         return totalTime;
     }
 
     public void setTotalTime(Integer totalTime) {
         this.totalTime = totalTime;
+    }
+
+    public Boolean getConcluded() {
+        return concluded;
+    }
+
+    public void setConcluded(Boolean concluded) {
+        this.concluded = concluded;
     }
 }
