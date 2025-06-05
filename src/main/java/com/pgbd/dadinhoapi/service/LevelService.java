@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.stream;
-import static java.util.Collections.shuffle;
-
 @Service
 public class LevelService {
 
@@ -42,7 +39,6 @@ public class LevelService {
 
         level.setIcon(data.icon());
         level.setTitle(data.title());
-        level.setAnswers(data.answers());
 
         repository.save(level);
 
@@ -55,7 +51,6 @@ public class LevelService {
 
         level.setIcon(data.icon());
         level.setTitle(data.title());
-        level.setAnswers(data.answers());
 
         repository.save(level);
 
@@ -69,21 +64,13 @@ public class LevelService {
 
     public LevelSetupDTO mountLevelSetup(Long levelId) {
         Level level = repository.findById(levelId).orElseThrow(EntityNotFoundException::new);
-        List<String> options = new ArrayList<>();
-
-        for (String answer : level.getAnswers()) {
-            options.addAll(stream(answer.split("\\|")).toList());
-        }
-
-        shuffle(options);
 
         return new LevelSetupDTO(
                 level.getId(),
                 level.getIcon(),
                 level.getTitle(),
                 level.getRecipe(),
-                level.getBaskets(),
-                options
+                level.getBaskets()
         );
     }
 
