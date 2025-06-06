@@ -2,6 +2,8 @@ databaseChangeLog:
   - include:
       file: db/v1.1/tbBasket_addColumnName.yaml
   - include:
+      file: db/v1.1/tbBasket_updateNames.yaml
+  - include:
       file: db/v1.1/tbUserConcludedLevel_renameToTbUserLevelMetrics.yaml
   - include:
       file: db/v1.1/tbLevelAnswers_dropTable.yaml
