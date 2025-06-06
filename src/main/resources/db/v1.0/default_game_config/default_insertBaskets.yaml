@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: default_insertBaskets
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - sql: |
+            -- Nível 1
+            INSERT INTO tb_basket (level_id) VALUES (1);
+            INSERT INTO tb_basket (level_id) VALUES (1);
+            INSERT INTO tb_basket (level_id) VALUES (1);
+            
+            -- Nível 2
+            INSERT INTO tb_basket (level_id) VALUES (2);
+            INSERT INTO tb_basket (level_id) VALUES (2);
+            INSERT INTO tb_basket (level_id) VALUES (2);
+            
+            -- Nível 3
+            INSERT INTO tb_basket (level_id) VALUES (3);
+            INSERT INTO tb_basket (level_id) VALUES (3);
+            
+            -- Nível 4
+            INSERT INTO tb_basket (level_id) VALUES (4);
+            INSERT INTO tb_basket (level_id) VALUES (4);
+            INSERT INTO tb_basket (level_id) VALUES (4);
+            
+            -- Nível 5
+            INSERT INTO tb_basket (level_id) VALUES (5);
+            INSERT INTO tb_basket (level_id) VALUES (5);
+            INSERT INTO tb_basket (level_id) VALUES (5);
+            
+            -- Nível 6
+            INSERT INTO tb_basket (level_id) VALUES (6);
+            INSERT INTO tb_basket (level_id) VALUES (6);
+            INSERT INTO tb_basket (level_id) VALUES (6);
+            INSERT INTO tb_basket (level_id) VALUES (6);
+            
+            -- Nível 7
+            INSERT INTO tb_basket (level_id) VALUES (7);
+            INSERT INTO tb_basket (level_id) VALUES (7);
+            INSERT INTO tb_basket (level_id) VALUES (7);
+            INSERT INTO tb_basket (level_id) VALUES (7);

@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: default_insertLevelAnswers
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - sql: |
+            -- Nível 1
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (1, 'Pegue|uma 🍌|do Cesto 1');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (1, 'Pegue|uma 🍎|do Cesto 3');
+            
+            -- Nível 2
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (2, 'Pegue|uma 🍇|do Cesto 2');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (2, 'Pegue|todas as 🍎|do Cesto 3');
+            
+            -- Nível 3
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (3, 'Pegue|todos os itens|do Cesto 1');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (3, 'Remova|uma 🍌|do Meu Cesto');
+            
+            -- Nível 4
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (4, 'Pegue|todas as 🍌|do Cesto 3');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (4, 'Pegue|todas as 🍇|do Cesto 2');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (4, 'Remova|uma 🍌|do Meu Cesto');
+            
+            -- Nível 5
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (5, 'Pegue|todos os Itens|do Cesto 2');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (5, 'Pegue|uma 🍎|do Cesto 1');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (5, 'Remova|todas as 🍇|do Meu Cesto');
+            
+            -- Nível 6
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (6, 'Pegue|todos os Itens|do Cesto 1');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (6, 'Pegue|todas as 🍇|do Cesto 3');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (6, 'Remova|todas as 🍎|do Meu Cesto');
+            
+            -- Nível 7
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (6, 'Pegue|todos os Itens|do Cesto 2');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (6, 'Pegue|uma 🍎|do Cesto 4');
+            INSERT INTO tb_level_answers (level_id, answer) VALUES (6, 'Remova|uma 🍇|do Meu Cesto');

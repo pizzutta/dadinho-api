@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: db/v1.0/default_game_config/default_insertItems.yaml
+  - include:
+      file: db/v1.0/default_game_config/default_insertLevels.yaml
+  - include:
+      file: db/v1.0/default_game_config/default_insertRecipes.yaml
+  - include:
+      file: db/v1.0/default_game_config/default_insertBaskets.yaml
+  - include:
+      file: db/v1.0/default_game_config/default_insertBasketItems.yaml
+  - include:
+      file: db/v1.0/default_game_config/default_insertLevelAnswers.yaml
