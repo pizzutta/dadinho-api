@@ -1,5 +1,6 @@
 package com.pgbd.dadinhoapi.service;
 
+import com.pgbd.dadinhoapi.dto.LevelProgressDTO;
 import com.pgbd.dadinhoapi.dto.UserAnswerDTO;
 import com.pgbd.dadinhoapi.game.model.Result;
 import com.pgbd.dadinhoapi.model.Item;
@@ -15,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.pgbd.dadinhoapi.game.GameCommandValidator.validate;
+import static java.util.stream.Collectors.toMap;
 
 @Service
 public class GameService {
@@ -29,6 +32,26 @@ public class GameService {
     private UserRepository userRepository;
     @Autowired
     private UserLevelMetricsRepository userLevelMetricsRepository;
+
+    public List<LevelProgressDTO> getProgressByUserId(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        List<UserLevelMetrics> userLevelMetrics = userLevelMetricsRepository.findByUser(user);
+        List<Level> levels = levelRepository.findAll();
+
+        Map<Long, Boolean> concludedMap = userLevelMetrics.stream()
+                .collect(toMap(
+                        m -> m.getLevel().getId(),
+                        UserLevelMetrics::getConcluded
+                ));
+
+        return levels.stream()
+                .map(level -> new LevelProgressDTO(
+                        level.getId(),
+                        level.getIcon(),
+                        concludedMap.getOrDefault(level.getId(), false)
+                ))
+                .toList();
+    }
 
     public Result submit(UserAnswerDTO data) {
         Level level = levelRepository.findById(data.levelId()).orElseThrow(EntityNotFoundException::new);

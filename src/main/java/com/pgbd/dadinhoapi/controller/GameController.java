@@ -30,7 +30,7 @@ public class GameController {
 
     @GetMapping("/progress/{userId}")
     public ResponseEntity<List<LevelProgressDTO>> getUserProgress(@PathVariable Long userId) {
-        List<LevelProgressDTO> progress = levelService.getUserProgress(userId);
+        List<LevelProgressDTO> progress = service.getProgressByUserId(userId);
         return progress.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(progress);
     }
 
