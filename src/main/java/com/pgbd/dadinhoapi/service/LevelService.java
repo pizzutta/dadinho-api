@@ -5,7 +5,6 @@ import com.pgbd.dadinhoapi.dto.LevelSetupDTO;
 import com.pgbd.dadinhoapi.dto.LevelUpdateDTO;
 import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.repository.LevelRepository;
-import com.pgbd.dadinhoapi.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ public class LevelService {
 
     @Autowired
     private LevelRepository repository;
-    @Autowired
-    private UserRepository userRepository;
 
     public Optional<Level> findById(Long id) {
         return repository.findById(id);
