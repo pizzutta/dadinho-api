@@ -3,6 +3,8 @@ package com.pgbd.dadinhoapi.controller;
 import com.pgbd.dadinhoapi.dto.LevelProgressDTO;
 import com.pgbd.dadinhoapi.dto.LevelSetupDTO;
 import com.pgbd.dadinhoapi.dto.UserAnswerDTO;
+import com.pgbd.dadinhoapi.game.model.Result;
+import com.pgbd.dadinhoapi.service.GameService;
 import com.pgbd.dadinhoapi.service.LevelService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import java.util.List;
 @RequestMapping("/game")
 public class GameController {
 
+    @Autowired
+    private GameService service;
     @Autowired
     private LevelService levelService;
 
@@ -31,8 +35,8 @@ public class GameController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<Boolean> submit(@RequestBody @Valid UserAnswerDTO data) {
-        Boolean success = levelService.verifyAnswer(data);
-        return ResponseEntity.ok(success);
+    public ResponseEntity<Result> submit(@RequestBody @Valid UserAnswerDTO data) {
+        Result result = service.submit(data);
+        return ResponseEntity.ok(result);
     }
 }

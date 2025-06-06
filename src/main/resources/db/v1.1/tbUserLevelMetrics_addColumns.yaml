@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbUserLevelMetrics_addColumns
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            tableName: tb_user_level_metrics
+            columns:
+              - column:
+                    name: attempts
+                    type: INTEGER
+              - column:
+                    name: concluded
+                    type: BOOLEAN

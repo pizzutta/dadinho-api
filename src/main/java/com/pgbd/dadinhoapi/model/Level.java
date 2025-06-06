@@ -17,10 +17,6 @@ public class Level {
     private String icon;
     @Column
     private String title;
-    @ElementCollection
-    @CollectionTable(name = "tb_level_answers", joinColumns = @JoinColumn(name = "level_id"))
-    @Column(name = "answer")
-    private List<String> answers = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "level_id")
     private List<ItemRecipe> recipe = new ArrayList<>();
@@ -50,14 +46,6 @@ public class Level {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<String> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<String> answers) {
-        this.answers = answers;
     }
 
     public List<ItemRecipe> getRecipe() {
