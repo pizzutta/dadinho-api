@@ -37,3 +37,5 @@ databaseChangeLog:
       file: db/v1.0/tbUserConcludedLevel_addForeignKeys.yaml
   - include:
       file: db/v1.0/tbUser_addChecks.yaml
+  - include:
+      file: db/v1.0/default_game_config/default_game_config.yaml

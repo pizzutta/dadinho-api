@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: default_insertLevels
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - sql: |
+            INSERT INTO tb_level (icon, title) VALUES ('1', 'Nível 01');
+            INSERT INTO tb_level (icon, title) VALUES ('2', 'Nível 02');
+            INSERT INTO tb_level (icon, title) VALUES ('3', 'Nível 03');
+            INSERT INTO tb_level (icon, title) VALUES ('4', 'Nível 04');
+            INSERT INTO tb_level (icon, title) VALUES ('5', 'Nível 05');
+            INSERT INTO tb_level (icon, title) VALUES ('6', 'Nível 06');
+            INSERT INTO tb_level (icon, title) VALUES ('7', 'Nível 07');

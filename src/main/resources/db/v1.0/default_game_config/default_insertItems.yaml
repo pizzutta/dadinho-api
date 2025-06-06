@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: default_insertItems
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - sql: |
+            INSERT INTO tb_item (icon, name) VALUES ('🍌', 'Banana');
+            INSERT INTO tb_item (icon, name) VALUES ('🍇', 'Uva');
+            INSERT INTO tb_item (icon, name) VALUES ('🍎', 'Maçã');
