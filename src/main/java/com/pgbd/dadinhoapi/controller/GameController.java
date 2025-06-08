@@ -4,6 +4,8 @@ import com.pgbd.dadinhoapi.dto.LevelProgressDTO;
 import com.pgbd.dadinhoapi.dto.LevelSetupDTO;
 import com.pgbd.dadinhoapi.dto.UserAnswerDTO;
 import com.pgbd.dadinhoapi.game.model.Result;
+import com.pgbd.dadinhoapi.model.UserLevelMetrics;
+import com.pgbd.dadinhoapi.model.filter.UserLevelMetricsFilter;
 import com.pgbd.dadinhoapi.service.GameService;
 import com.pgbd.dadinhoapi.service.LevelService;
 import jakarta.validation.Valid;
@@ -32,6 +34,12 @@ public class GameController {
     public ResponseEntity<List<LevelProgressDTO>> getUserProgress(@PathVariable Long userId) {
         List<LevelProgressDTO> progress = service.findProgressByUserId(userId);
         return progress.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(progress);
+    }
+
+    @GetMapping("/metrics")
+    public ResponseEntity<List<UserLevelMetrics>> getGameMetrics(UserLevelMetricsFilter filter) {
+        List<UserLevelMetrics> metrics = service.findGameMetrics(filter);
+        return ResponseEntity.ok(metrics);
     }
 
     @PostMapping("/submit")

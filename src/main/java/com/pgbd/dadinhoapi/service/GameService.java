@@ -7,6 +7,7 @@ import com.pgbd.dadinhoapi.model.Item;
 import com.pgbd.dadinhoapi.model.Level;
 import com.pgbd.dadinhoapi.model.User;
 import com.pgbd.dadinhoapi.model.UserLevelMetrics;
+import com.pgbd.dadinhoapi.model.filter.UserLevelMetricsFilter;
 import com.pgbd.dadinhoapi.repository.ItemRepository;
 import com.pgbd.dadinhoapi.repository.LevelRepository;
 import com.pgbd.dadinhoapi.repository.UserLevelMetricsRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.pgbd.dadinhoapi.game.GameCommandValidator.validate;
+import static com.pgbd.dadinhoapi.specification.UserLevelMetricsSpecifications.withFilters;
 import static java.util.stream.Collectors.toMap;
 
 @Service
@@ -51,6 +53,10 @@ public class GameService {
                         concludedMap.getOrDefault(level.getId(), false)
                 ))
                 .toList();
+    }
+
+    public List<UserLevelMetrics> findGameMetrics(UserLevelMetricsFilter filter) {
+        return userLevelMetricsRepository.findAll(withFilters(filter));
     }
 
     public Result submit(UserAnswerDTO data) {
