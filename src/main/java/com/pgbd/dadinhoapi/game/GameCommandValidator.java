@@ -181,7 +181,7 @@ public class GameCommandValidator {
         for (Entry<Item, Integer> entry : expected.entrySet()) {
             Item item = entry.getKey();
             Integer expectedQuantity = entry.getValue();
-            Integer resultQuantity = finalBasket.get(item);
+            Integer resultQuantity = finalBasket.getOrDefault(item, 0);
             if (resultQuantity.equals(expectedQuantity)) {
                 result.setStatus(CORRECT);
             } else {
