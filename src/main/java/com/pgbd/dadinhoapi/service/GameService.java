@@ -33,7 +33,7 @@ public class GameService {
     @Autowired
     private UserLevelMetricsRepository userLevelMetricsRepository;
 
-    public List<LevelProgressDTO> getProgressByUserId(Long userId) {
+    public List<LevelProgressDTO> findProgressByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         List<UserLevelMetrics> userLevelMetrics = userLevelMetricsRepository.findByUser(user);
         List<Level> levels = levelRepository.findAll();
