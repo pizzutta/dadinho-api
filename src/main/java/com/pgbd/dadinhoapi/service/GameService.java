@@ -80,6 +80,7 @@ public class GameService {
         if (result.isValid()) {
             metrics.setConcluded(true);
             metrics.setTotalTime(totalTime);
+            metrics.setAttempts(1);
         } else {
             metrics.setConcluded(false);
             metrics.setAttempts(metrics.getAttempts() != null ? metrics.getAttempts() + 1 : 1);
