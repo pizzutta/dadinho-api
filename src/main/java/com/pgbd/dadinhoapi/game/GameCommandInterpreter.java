@@ -5,6 +5,7 @@ import com.pgbd.dadinhoapi.game.model.Result;
 import com.pgbd.dadinhoapi.model.Basket;
 import com.pgbd.dadinhoapi.model.Item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class GameCommandInterpreter {
     }
 
     private static void handleSelect(Result result, Command command, Map<Item, Integer> finalBasket) {
-        Basket basket = command.getBasket();
+        Basket basket = copyBasket(command.getBasket());
         Item item = command.getItem();
         finalBasket.putIfAbsent(item, 0);
 
@@ -60,6 +61,13 @@ public class GameCommandInterpreter {
         } else {
             finalBasket.put(item, basketQuantity - commandQuantity);
         }
+    }
+
+    private static Basket copyBasket(Basket original) {
+        Basket copy = new Basket();
+        copy.setId(original.getId()); // manter ID se necessário para referência
+        copy.setItems(new ArrayList<>(original.getItems())); // shallow copy suficiente
+        return copy;
     }
 
     private static void putItemIntoFinalBasket(Basket basket, int index, Map<Item, Integer> result) {
