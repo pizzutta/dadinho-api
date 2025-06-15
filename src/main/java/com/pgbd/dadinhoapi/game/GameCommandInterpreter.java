@@ -55,12 +55,18 @@ public class GameCommandInterpreter {
         Item item = command.getItem();
         Integer commandQuantity = command.getQuantity();
         Integer basketQuantity = finalBasket.get(item);
-        if (commandQuantity > basketQuantity) {
-            result.setStatus(INSUFFICIENT_ITEMS_ON_BASKET);
-            result.setErrorDetail("Seu Cesto");
+
+        if (commandQuantity != null) {
+            if (commandQuantity > basketQuantity) {
+                result.setStatus(INSUFFICIENT_ITEMS_ON_BASKET);
+                result.setErrorDetail("Seu Cesto");
+            } else {
+                finalBasket.put(item, basketQuantity - commandQuantity);
+            }
         } else {
-            finalBasket.put(item, basketQuantity - commandQuantity);
+            finalBasket.remove(item);
         }
+
     }
 
     private static Basket copyBasket(Basket original) {
