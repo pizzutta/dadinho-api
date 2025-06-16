@@ -54,6 +54,12 @@ public class GameCommandValidator {
 
     private static void handleAction(String commandString, Command command, Result result) {
         int firstSpace = commandString.indexOf(' ');
+
+        if (firstSpace == -1) {
+            result.setStatus(SYNTAX_ERROR);
+            return;
+        }
+
         String action = commandString.substring(0, firstSpace).toUpperCase();
 
         switch (action) {
@@ -103,6 +109,12 @@ public class GameCommandValidator {
 
     private static void handleItem(String commandString, Command command, Result result) {
         int firstSpace = commandString.indexOf(' ');
+
+        if (firstSpace == -1) {
+            result.setStatus(SYNTAX_ERROR);
+            return;
+        }
+
         String item = commandString.substring(0, firstSpace).toUpperCase();
         boolean isValid = validateItem(item, command, result);
 
