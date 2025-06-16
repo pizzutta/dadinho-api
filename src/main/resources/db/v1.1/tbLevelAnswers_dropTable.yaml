@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbLevelAnswers_dropTable
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropTable:
+            tableName: tb_level_answers
