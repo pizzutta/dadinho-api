@@ -1,6 +1,7 @@
 package com.pgbd.dadinhoapi.controller;
 
 import com.pgbd.dadinhoapi.dto.IdDTO;
+import com.pgbd.dadinhoapi.dto.LevelProgressDTO;
 import com.pgbd.dadinhoapi.dto.LevelRegisterDTO;
 import com.pgbd.dadinhoapi.dto.LevelUpdateDTO;
 import com.pgbd.dadinhoapi.model.Level;
@@ -50,5 +51,11 @@ public class LevelController {
     public ResponseEntity<Void> delete(@RequestBody @Valid IdDTO data) {
         service.deleteById(data.id());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<LevelProgressDTO>> getUserProgress(@PathVariable Long userId) {
+        List<LevelProgressDTO> progress = service.getUserProgress(userId);
+        return progress.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(progress);
     }
 }
