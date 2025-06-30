@@ -33,10 +33,10 @@ public class SecurityConfigurations {
                         .requestMatchers(POST, "/auth/login", "/auth/register").permitAll()
 
                         .requestMatchers(POST, "/basket", "/item", "/item-recipe", "/level").hasRole("ADMIN")
-                        .requestMatchers(GET, "/basket", "/item", "/item-recipe", "/level", "/user", "/game/metrics").hasRole("ADMIN")
                         .requestMatchers(PUT, "/basket", "/item", "/item-recipe", "/level").hasRole("ADMIN")
                         .requestMatchers(DELETE, "/basket", "/item", "/item-recipe", "/level", "/user").hasRole("ADMIN")
 
+                        .requestMatchers(GET, "/basket", "/item", "/item-recipe", "/level", "/user", "/game/metrics").hasAnyRole("ADMIN", "TEACHER")
                         .requestMatchers(GET, "/class").hasAnyRole("ADMIN", "TEACHER")
                         .requestMatchers(POST, "/class").hasAnyRole("ADMIN", "TEACHER")
                         .requestMatchers(PUT, "/class").hasAnyRole("ADMIN", "TEACHER")
