@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbBasket_addColumnName
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            tableName: tb_basket
+            columns:
+              - column:
+                    name: name
+                    type: VARCHAR(255)

@@ -3,6 +3,10 @@ package com.pgbd.dadinhoapi.controller;
 import com.pgbd.dadinhoapi.dto.LevelProgressDTO;
 import com.pgbd.dadinhoapi.dto.LevelSetupDTO;
 import com.pgbd.dadinhoapi.dto.UserAnswerDTO;
+import com.pgbd.dadinhoapi.game.model.Result;
+import com.pgbd.dadinhoapi.model.UserLevelMetrics;
+import com.pgbd.dadinhoapi.model.filter.UserLevelMetricsFilter;
+import com.pgbd.dadinhoapi.service.GameService;
 import com.pgbd.dadinhoapi.service.LevelService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,8 @@ import java.util.List;
 public class GameController {
 
     @Autowired
+    private GameService service;
+    @Autowired
     private LevelService levelService;
 
     @GetMapping("/setup/{levelId}")
@@ -26,13 +32,19 @@ public class GameController {
 
     @GetMapping("/progress/{userId}")
     public ResponseEntity<List<LevelProgressDTO>> getUserProgress(@PathVariable Long userId) {
-        List<LevelProgressDTO> progress = levelService.getUserProgress(userId);
+        List<LevelProgressDTO> progress = service.findProgressByUserId(userId);
         return progress.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(progress);
     }
 
+    @GetMapping("/metrics")
+    public ResponseEntity<List<UserLevelMetrics>> getGameMetrics(UserLevelMetricsFilter filter) {
+        List<UserLevelMetrics> metrics = service.findGameMetrics(filter);
+        return ResponseEntity.ok(metrics);
+    }
+
     @PostMapping("/submit")
-    public ResponseEntity<Boolean> submit(@RequestBody @Valid UserAnswerDTO data) {
-        Boolean success = levelService.verifyAnswer(data);
-        return ResponseEntity.ok(success);
+    public ResponseEntity<Result> submit(@RequestBody @Valid UserAnswerDTO data) {
+        Result result = service.submit(data);
+        return ResponseEntity.ok(result);
     }
 }

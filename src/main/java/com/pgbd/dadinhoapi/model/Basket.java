@@ -13,6 +13,8 @@ public class Basket {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+    @Column
+    private String name;
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "tb_basket_item",
@@ -27,6 +29,14 @@ public class Basket {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Item> getItems() {

@@ -38,6 +38,7 @@ public class BasketService {
     @Transactional
     public Basket save(BasketRegisterDTO data) {
         Basket basket = new Basket();
+        basket.setName(data.name());
         for (Long itemId : data.itemsIds()) {
             basket.getItems().add(itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new));
         }
@@ -53,6 +54,7 @@ public class BasketService {
     @Transactional
     public Basket save(BasketUpdateDTO data) {
         Basket basket = repository.findById(data.id()).orElseThrow(EntityNotFoundException::new);
+        basket.setName(data.name());
 
         List<Item> items = new ArrayList<>();
         for (Long itemId : data.itemsIds()) {

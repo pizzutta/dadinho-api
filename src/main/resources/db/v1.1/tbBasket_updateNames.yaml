@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: tbBasket_updateNames
+      author: Vitória
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - sql: |
+            -- Nível 1
+            UPDATE tb_basket SET name = 'Cesto 1' where id = 1;
+            UPDATE tb_basket SET name = 'Cesto 2' where id = 2;
+            UPDATE tb_basket SET name = 'Cesto 3' where id = 3;
+            
+            -- Nível 2
+            UPDATE tb_basket SET name = 'Cesto 1' where id = 4;
+            UPDATE tb_basket SET name = 'Cesto 2' where id = 5;
+            UPDATE tb_basket SET name = 'Cesto 3' where id = 6;
+            
+            -- Nível 3
+            UPDATE tb_basket SET name = 'Cesto 1' where id = 7;
+            UPDATE tb_basket SET name = 'Cesto 2' where id = 8;
+            
+            -- Nível 4
+            UPDATE tb_basket SET name = 'Cesto 1' where id = 9;
+            UPDATE tb_basket SET name = 'Cesto 2' where id = 10;
+            UPDATE tb_basket SET name = 'Cesto 3' where id = 11;
+            
+            -- Nível 5
+            UPDATE tb_basket SET name = 'Cesto 1' where id = 12;
+            UPDATE tb_basket SET name = 'Cesto 2' where id = 13;
+            UPDATE tb_basket SET name = 'Cesto 3' where id = 14;
+            
+            -- Nível 6
+            UPDATE tb_basket SET name = 'Cesto 1' where id = 15;
+            UPDATE tb_basket SET name = 'Cesto 2' where id = 16;
+            UPDATE tb_basket SET name = 'Cesto 3' where id = 17;
+            UPDATE tb_basket SET name = 'Cesto 4' where id = 18;
+            
+            -- Nível 7
+            UPDATE tb_basket SET name = 'Cesto 1' where id = 19;
+            UPDATE tb_basket SET name = 'Cesto 2' where id = 20;
+            UPDATE tb_basket SET name = 'Cesto 3' where id = 21;
+            UPDATE tb_basket SET name = 'Cesto 4' where id = 22;

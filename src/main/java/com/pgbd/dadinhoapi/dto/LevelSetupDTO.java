@@ -10,7 +10,6 @@ public record LevelSetupDTO(
         String icon,
         String title,
         List<ItemRecipe> recipe,
-        List<Basket> baskets,
-        List<String> options
+        List<Basket> baskets
 ) {
 }
